@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liam Pchaitin — Sports Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400&family=Fraunces:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: #f0ede6;
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.95);
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: #f0ede6;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(240,237,230,0.5);
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #c8f542; }
+
+    .hero {
+      padding: 5rem 3rem 4rem;
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: end;
+    }
+
+    .hero-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c8f542;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 4.5rem;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: #f0ede6;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-name span {
+      display: block;
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(240,237,230,0.45);
+      font-size: 3.8rem;
+    }
+
+    .hero-desc {
+      font-family: 'Fraunces', serif;
+      font-size: 1.15rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(240,237,230,0.7);
+      margin-bottom: 2rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(240,237,230,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .stat {
+      background: #0a0a0a;
+      padding: 1.2rem;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #c8f542;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.4);
+      margin-top: 0.3rem;
+      display: block;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: #c8f542;
+      color: #0a0a0a;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .btn-primary:hover { background: #d4f76e; }
+
+    .btn-secondary {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      color: rgba(240,237,230,0.6);
+      border: 0.5px solid rgba(240,237,230,0.25);
+      padding: 0.85rem 1.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(240,237,230,0.6);
+      color: #f0ede6;
+    }
+
+    .ticker {
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+      padding: 0.8rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-flex;
+      gap: 4rem;
+      animation: ticker 25s linear infinite;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.3);
+    }
+
+    .ticker-item { display: inline-flex; gap: 1rem; align-items: center; }
+
+    .ticker-dot {
+      width: 4px;
+      height: 4px;
+      background: #c8f542;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 2.5rem 3rem 1.5rem;
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.45);
+    }
+
+    .section-num { font-size: 0.68rem; color: #c8f542; }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+    }
+
+    .project-card {
+      padding: 2rem;
+      border-right: 0.5px solid rgba(240,237,230,0.12);
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:last-child { border-right: none; }
+    .project-card:hover { background: rgba(200,245,66,0.04); }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: #c8f542;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-num {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: rgba(240,237,230,0.3);
+      margin-bottom: 2rem;
+    }
+
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #f0ede6;
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+
+    .project-desc {
+      font-family: 'Fraunces', serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: rgba(240,237,230,0.55);
+      margin-bottom: 1.5rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 0.5px solid rgba(240,237,230,0.2);
+      padding: 0.3rem 0.7rem;
+      color: rgba(240,237,230,0.5);
+    }
+
+    .tag.accent {
+      border-color: rgba(200,245,66,0.4);
+      color: #c8f542;
+    }
+
+    .project-metric {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #c8f542;
+    }
+
+    .metric-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.35);
+    }
+
+    .project-link {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.4);
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .project-link:hover { color: #c8f542; }
+
+    .goal-banner {
+      background: rgba(200,245,66,0.06);
+      border-top: 0.5px solid rgba(200,245,66,0.2);
+      border-bottom: 0.5px solid rgba(200,245,66,0.2);
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .goal-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c8f542;
+      white-space: nowrap;
+    }
+
+    .goal-text {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(240,237,230,0.7);
+    }
+
+    .skills-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 0.5px solid rgba(240,237,230,0.12);
+    }
+
+    .skills-left {
+      padding: 2.5rem 3rem;
+      border-right: 0.5px solid rgba(240,237,230,0.12);
+    }
+
+    .skills-right { padding: 2.5rem 3rem; }
+
+    .skills-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #f0ede6;
+      margin-bottom: 2rem;
+      line-height: 1.1;
+    }
+
+    .skill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 0;
+      border-bottom: 0.5px solid rgba(240,237,230,0.08);
+    }
+
+    .skill-name {
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: rgba(240,237,230,0.75);
+    }
+
+    .skill-bar {
+      width: 120px;
+      height: 2px;
+      background: rgba(240,237,230,0.1);
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: #c8f542;
+    }
+
+    .experience-item {
+      padding: 1.5rem 0;
+      border-bottom: 0.5px solid rgba(240,237,230,0.08);
+    }
+
+    .experience-item:last-child { border-bottom: none; }
+
+    .exp-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+
+    .exp-role {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #f0ede6;
+    }
+
+    .exp-date {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: #c8f542;
+    }
+
+    .exp-company {
+      font-size: 0.75rem;
+      color: rgba(240,237,230,0.5);
+      letter-spacing: 0.03em;
+      line-height: 1.5;
+    }
+
+    footer {
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 0.5px solid rgba(240,237,230,0.12);
+    }
+
+    .footer-left {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: rgba(240,237,230,0.3);
+      text-transform: uppercase;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240,237,230,0.4);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: #c8f542; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2rem; }
+      .hero-name { font-size: 3rem; }
+      .hero-name span { font-size: 2.6rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card { border-right: none; border-bottom: 0.5px solid rgba(240,237,230,0.12); }
+      .skills-section { grid-template-columns: 1fr; }
+      .skills-left { border-right: none; border-bottom: 0.5px solid rgba(240,237,230,0.12); }
+      .section-header { padding: 2rem 1.5rem 1rem; }
+      .skills-left, .skills-right { padding: 2rem 1.5rem; }
+      .goal-banner { padding: 1.2rem 1.5rem; flex-direction: column; gap: 0.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Liam Pchaitin</div>
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="https://github.com/Lpchaitin" target="_blank">GitHub ↗</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <p class="hero-tag">// Sports Analytics Engineer</p>
+      <h1 class="hero-name">
+        Data-Driven
+        <span>Football.</span>
+      </h1>
+    </div>
+    <div>
+      <p class="hero-desc">Building ML pipelines and analytics systems where football strategy meets data science. Targeting NFL team-side analytics roles.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">39K+</span>
+          <span class="stat-label">Plays analyzed</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">91%</span>
+          <span class="stat-label">Model accuracy</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">3</span>
+          <span class="stat-label">NFL projects</span>
+        </div>
+      </div>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="https://www.linkedin.com/in/liampchaitin" target="_blank" class="btn-secondary">LinkedIn ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item"><span class="ticker-dot"></span>XGBoost · Python · SQL · Snowflake · Databricks</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>nfl_data_py · EPA Modeling · Draft Analysis</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Formation Analysis · Predictive Modeling · ETL Pipelines</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>XGBoost · Python · SQL · Snowflake · Databricks</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>nfl_data_py · EPA Modeling · Draft Analysis</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Formation Analysis · Predictive Modeling · ETL Pipelines</span>
+    </div>
+  </div>
+
+  <div class="section-header" id="projects">
+    <span class="section-title">Portfolio Projects</span>
+    <span class="section-num">01 / 03</span>
+  </div>
+
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">001</div>
+      <h2 class="project-title">NFL 4th Down Decision Model</h2>
+      <p class="project-desc">XGBoost classifier predicting optimal 4th down decisions across 39K plays. Quantifies coaching aggressiveness, WPA impact, and formation efficiency by coach.</p>
+      <div class="project-tags">
+        <span class="tag accent">XGBoost</span>
+        <span class="tag">EPA / WPA</span>
+        <span class="tag">2016–2025</span>
+        <span class="tag">7 Notebooks</span>
+      </div>
+      <div class="project-metric">
+        <span class="metric-val">91%</span>
+        <span class="metric-label">Model accuracy</span>
+      </div>
+      <a href="https://github.com/Lpchaitin/nfl-4th-down-analysis" target="_blank" class="project-link">View on GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">002</div>
+      <h2 class="project-title">NFL Formation Analysis</h2>
+      <p class="project-desc">Formation vs coverage EPA matrices across 344K plays. Route performance heatmaps, red zone analysis, and SEA vs LA 2025 playoff case study.</p>
+      <div class="project-tags">
+        <span class="tag accent">344K Plays</span>
+        <span class="tag">Route Trees</span>
+        <span class="tag">Coverage Types</span>
+        <span class="tag">8 Notebooks</span>
+      </div>
+      <div class="project-metric">
+        <span class="metric-val">+0.73</span>
+        <span class="metric-label">Peak EPA matchup</span>
+      </div>
+      <a href="https://github.com/Lpchaitin/nfl-formation-analysis" target="_blank" class="project-link">View on GitHub →</a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-num">003</div>
+      <h2 class="project-title">NFL Draft Model</h2>
+      <p class="project-desc">Predicts draft success from college stats and combine measurables. Identifies overdrafted players and ranks all 32 teams by drafting performance 2010–2021.</p>
+      <div class="project-tags">
+        <span class="tag accent">2,779 Picks</span>
+        <span class="tag">Combine Data</span>
+        <span class="tag">College Stats</span>
+        <span class="tag">6 Notebooks</span>
+      </div>
+      <div class="project-metric">
+        <span class="metric-val">0.670</span>
+        <span class="metric-label">QB model AUC</span>
+      </div>
+      <a href="https://github.com/Lpchaitin/nfl-draft-model" target="_blank" class="project-link">View on GitHub →</a>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <span class="goal-label">Career Target</span>
+    <span class="goal-text">Seeking NFL team-side analytics roles — bringing production ML experience from Orb Analytics to the front office.</span>
+  </div>
+
+  <div class="skills-section" id="skills">
+    <div class="skills-left">
+      <h2 class="skills-heading">Technical<br>Stack</h2>
+      <div class="skill-row">
+        <span class="skill-name">Python</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">XGBoost / scikit-learn</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">SQL / Snowflake</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Databricks / ETL</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">nfl_data_py / EPA</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">GitHub Actions</span>
+        <div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div>
+      </div>
+    </div>
+
+    <div class="skills-right" id="experience">
+      <h2 class="skills-heading">Experience</h2>
+      <div class="experience-item">
+        <div class="exp-row">
+          <span class="exp-role">ML / Data Engineer</span>
+          <span class="exp-date">2025 — Present</span>
+        </div>
+        <span class="exp-company">Orb Analytics · Production ML pipelines and ETL workflows for sports prediction models using Python, Snowflake, and Databricks</span>
+      </div>
+      <div class="experience-item">
+        <div class="exp-row">
+          <span class="exp-role">BSBA — Information Systems & Business Analytics</span>
+          <span class="exp-date">2025</span>
+        </div>
+        <span class="exp-company">Loyola Marymount University</span>
+      </div>
+      <div class="experience-item">
+        <div class="exp-row">
+          <span class="exp-role">Career Advisory Call</span>
+          <span class="exp-date">2025</span>
+        </div>
+        <span class="exp-company">Seattle Seahawks COO · NFL front office networking and career guidance</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-left">© 2026 Liam Pchaitin · Sports Analytics</span>
+    <div class="footer-links">
+      <a href="https://github.com/Lpchaitin" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/liampchaitin" target="_blank">LinkedIn</a>
+      <a href="mailto:your@email.com">Email</a>
+    </div>
+  </footer>
+
+</body>
+</html>
